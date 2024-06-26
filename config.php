@@ -4,7 +4,7 @@
 $servername = "trackersys.mysql.database.azure.com";
 $username = "lucidojohncarlo";
 $password = "Jhared123";
-$dbname = "budget_tracker";
+$dbname = "user_db";
 $port = 3306;
 
 $ssl_cert_path = "/home/site/wwwroot/DigiCertGlobalRootCA.crt.pem";
