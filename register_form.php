@@ -2,28 +2,34 @@
 
 @include 'config.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitize and validate input data
-    $username = $conn->real_escape_string($_POST['username']);
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Always hash passwords
-    $email = $conn->real_escape_string($_POST['email']);
+if(isset($_POST['submit'])){
 
-    // Insert new user into the database
-    $sql = "INSERT INTO users (username, password, email) VALUES ('$username', '$password', '$email')";
+   $name = mysqli_real_escape_string($conn, $_POST['name']);
+   $email = mysqli_real_escape_string($conn, $_POST['email']);
+   $pass = md5($_POST['password']);
+   $cpass = md5($_POST['cpassword']);
+   $user_type = $_POST['user_type'];
 
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
-        // Redirect or display a success message
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }
+   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
 
-    $conn->close();
-} else {
-    echo "<script>alert('Error: No data to save.'); location.replace('./');</script>";
-    $conn->close();
-    exit;
-}
+   $result = mysqli_query($conn, $select);
+
+   if(mysqli_num_rows($result) > 0){
+
+      $error[] = 'user already exist!';
+
+   }else{
+
+      if($pass != $cpass){
+         $error[] = 'password not matched!';
+      }else{
+         $insert = "INSERT INTO users(name, email, password, user_type) VALUES('$name','$email','$pass','$user_type')";
+         mysqli_query($conn, $insert);
+         header('location: display_users.php');
+      }
+   }
+
+};
 ?>
 
 
