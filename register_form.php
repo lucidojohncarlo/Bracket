@@ -2,34 +2,46 @@
 
 @include 'config.php';
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = $_POST['password'];
+    $cpassword = $_POST['cpassword'];
+    $user_type = $_POST['user_type'];
 
-   $name = mysqli_real_escape_string($conn, $_POST['name']);
-   $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $pass = md5($_POST['password']);
-   $cpass = md5($_POST['cpassword']);
-   $user_type = $_POST['user_type'];
+    // Check if passwords match
+    if ($password !== $cpassword) {
+        $error[] = 'Passwords do not match!';
+    } else {
+        // Hash the password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-   $select = " SELECT * FROM user_form WHERE email = '$email' && password = '$pass' ";
+        // Check if the user already exists
+        $stmt = $conn->prepare("SELECT * FROM user_form WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-   $result = mysqli_query($conn, $select);
+        if ($result->num_rows > 0) {
+            $error[] = 'User already exists!';
+        } else {
+            // Insert the new user
+            $stmt = $conn->prepare("INSERT INTO user_form (name, email, password, user_type) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $name, $email, $hashed_password, $user_type);
 
-   if(mysqli_num_rows($result) > 0){
+            if ($stmt->execute()) {
+                header('Location: display_users.php');
+                exit();
+            } else {
+                $error[] = 'Error: ' . $stmt->error;
+            }
+        }
 
-      $error[] = 'user already exist!';
+        $stmt->close();
+    }
+}
 
-   }else{
-
-      if($pass != $cpass){
-         $error[] = 'password not matched!';
-      }else{
-         $insert = "INSERT INTO user_form(name, email, password, user_type) VALUES('$name','$email','$pass','$user_type')";
-         mysqli_query($conn, $insert);
-         header('location: display_users.php');
-      }
-   }
-
-};
+$conn->close();
 ?>
 
 
