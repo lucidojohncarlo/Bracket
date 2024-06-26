@@ -50,5 +50,23 @@
    text-align: center;
    width: 500px;
 }
-
+.auth-links {
+   display: flex;
+   justify-content: flex-end;
+   margin: 20px;
+}
+.auth-links a {
+   font-family: 'Press Start 2P', cursive;
+   font-size: 14px;
+   padding: 10px 20px;
+   margin-left: 10px;
+   text-decoration: none;
+   color: white;
+   background-color: #1F70A0;
+   border-radius: 4px;
+   transition: background-color 0.3s;
+}
+.auth-links a:hover {
+   background-color: #135581;
+}
 /* Other styles remain unchanged */
