@@ -50,22 +50,5 @@
    text-align: center;
    width: 500px;
 }
-.auth-buttons {
-   display: flex;
-   justify-content: flex-end;
-   margin: 20px;
-}
-.auth-buttons button {
-   font-family: 'Press Start 2P', cursive;
-   font-size: 14px;
-   padding: 10px 20px;
-   margin-left: 10px;
-   border: none;
-   cursor: pointer;
-   background-color: #1F70A0;
-   color: white;
-}
-.auth-buttons button:hover {
-   background-color: #135581;
-}
+
 /* Other styles remain unchanged */
